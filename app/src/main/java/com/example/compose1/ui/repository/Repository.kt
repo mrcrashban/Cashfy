@@ -40,4 +40,8 @@ class Repository(
         accountDao.insertAccount(account)
     }
 
+    suspend fun deleteAccount(account: Account){
+        accountDao.deleteAccount(account)
+    }
+
 }

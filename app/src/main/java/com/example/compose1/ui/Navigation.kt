@@ -9,13 +9,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose1.CashfyApplication
 import com.example.compose1.Graph
+import com.example.compose1.ui.account.AccountScreen
 import com.example.compose1.ui.category.CategoryScreen
 import com.example.compose1.ui.main.MainScreen
 
 
 enum class Routes {
     Main,
-    Category
+    Category,
+    Account
 }
 
 @Composable
@@ -31,6 +33,9 @@ fun CashfyNavigation(
         }
         composable("CategoryScreen") {
             CategoryScreen(navController = navHostController)
+        }
+        composable("AccountScreen"){
+            AccountScreen(navController = navHostController)
         }
     }
 }

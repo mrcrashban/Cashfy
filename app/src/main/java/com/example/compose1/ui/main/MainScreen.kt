@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -105,17 +107,26 @@ fun MainScreen(
 
         }
     ){
-        LazyColumn (
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(10.dp)
-                .background(Color.Green)
+        Column {
+            Spacer(modifier = Modifier.Companion.size(50.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate("AccountScreen") }
+            ) {
+                Text(text = "to Accounts")
+            }
+            LazyColumn (
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(10.dp)
+                    .background(Color.Green)
 
-        ){
-            items(mainState.transactions) {
-                TransactionListItem(transaction = it) {
-                  //  onNavigate.invoke(it.transaction.uidTransaction)
+            ){
+                items(mainState.transactions) {
+                    TransactionListItem(transaction = it) {
+                        //  onNavigate.invoke(it.transaction.uidTransaction)
+                    }
                 }
             }
         }
