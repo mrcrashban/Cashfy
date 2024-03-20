@@ -1,7 +1,7 @@
 package com.example.compose1.db.converters
 
 import androidx.room.TypeConverter
-import java.sql.Date
+import java.util.Date
 
 open class DateConverter {
     @TypeConverter

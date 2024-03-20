@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.compose1.CashfyApplication
 import com.example.compose1.Graph
 import com.example.compose1.ui.account.AccountScreen
+import com.example.compose1.ui.addtransaction.AddTransactionScreen
 import com.example.compose1.ui.category.CategoryScreen
 import com.example.compose1.ui.main.MainScreen
 
@@ -17,7 +18,8 @@ import com.example.compose1.ui.main.MainScreen
 enum class Routes {
     Main,
     Category,
-    Account
+    Account,
+    AddTransaction
 }
 
 @Composable
@@ -36,6 +38,9 @@ fun CashfyNavigation(
         }
         composable("AccountScreen"){
             AccountScreen(navController = navHostController)
+        }
+        composable("AddTransactionScreen"){
+            AddTransactionScreen(navController = navHostController)
         }
     }
 }

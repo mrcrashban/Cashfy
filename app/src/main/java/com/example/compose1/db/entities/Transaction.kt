@@ -12,6 +12,6 @@ data class Transaction(
     @ColumnInfo(name = "category_id") var categoryId: Int,
     @ColumnInfo(name = "sum") var sum: Double,
     @ColumnInfo(name = "type_of_transaction") var type: String,
-    @ColumnInfo(name = "date") var date: Date,
+    @ColumnInfo(name = "date") var date: java.util.Date,
     @ColumnInfo(name = "comment") var comment: String
 )

@@ -49,6 +49,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.compose1.R
 import com.example.compose1.db.TransactionsWithAccountAndCategory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +114,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.Companion.size(50.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { navController.navigate("AccountScreen") }
+                onClick = { navController.navigate("AddTransactionScreen") }
             ) {
                 Text(text = "to Accounts")
             }
@@ -156,12 +159,17 @@ fun TransactionListItem(
                     .fillMaxWidth()
             )
             {
+                Text(text = transaction.account.accountName, fontSize = 18.sp)
+                Spacer(modifier = Modifier.width(12.dp))
                 Text(text = transaction.category.categoryName, fontSize = 18.sp)
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(text = transaction.transaction.uidTransaction.toString(), fontSize = 18.sp)
+                Text(text = transaction.transaction.sum.toString(), fontSize = 18.sp)
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(text = transaction.transaction.sum.toString(), textAlign = TextAlign.Right, fontSize = 18.sp)
+                Text(text = transaction.transaction.date.toString(), fontSize = 18.sp)
             }
         }
     }
 }
+
+fun formatDate(date: Date): String =
+    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
