@@ -16,15 +16,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.magnifier
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -35,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.compose1.db.entities.Category
+import com.example.compose1.ui.DrawerBody
+import com.example.compose1.ui.DrawerHeader
+import com.example.compose1.ui.TopAppBarContent
 import com.example.compose1.ui.main.MainViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -44,24 +52,41 @@ fun CategoryScreen(
 ){
     val categoryViewModel = viewModel(modelClass = CategoryViewModel::class.java)
     val categoryState = categoryViewModel.state
-    Scaffold {
-        Column {
-            CategoryEntry(
-                state = categoryViewModel.state,
-                onCategoryChange = categoryViewModel::onCategoryChange,
-                onSaveCategory = categoryViewModel::addCategory,
-                modifier = Modifier.fillMaxHeight(0.2f)
-            ) {
-                navController.navigate("MainScreen")
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerHeader()
+                DrawerBody(navController)
             }
-            LazyColumn (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            ) {
-                items(categoryState.categoryList) {
-                    Categories(category = it) {
-                        categoryViewModel.deleteCategory(it)
+        }
+    ) {
+        Scaffold (
+            topBar = {
+                TopAppBarContent(scope, drawerState)
+            }
+        ){
+            Column {
+                Spacer(modifier = Modifier.size(it.calculateTopPadding()))
+                CategoryEntry(
+                    state = categoryViewModel.state,
+                    onCategoryChange = categoryViewModel::onCategoryChange,
+                    onSaveCategory = categoryViewModel::addCategory,
+                    modifier = Modifier.fillMaxHeight(0.2f)
+                ) {
+                    navController.navigate("MainScreen")
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                ) {
+                    items(categoryState.categoryList) {
+                        Categories(category = it) {
+                            categoryViewModel.deleteCategory(it)
+                        }
                     }
                 }
             }

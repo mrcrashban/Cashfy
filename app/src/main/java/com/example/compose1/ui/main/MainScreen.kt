@@ -25,15 +25,20 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,11 +54,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.compose1.R
 import com.example.compose1.db.TransactionsWithAccountAndCategory
+import com.example.compose1.ui.DrawerBody
+import com.example.compose1.ui.DrawerHeader
+import com.example.compose1.ui.TopAppBarContent
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
@@ -61,74 +70,44 @@ fun MainScreen(
 ) {
     val mainViewModel = viewModel(modelClass = MainViewModel::class.java)
     val mainState = mainViewModel.state
-    Scaffold (
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("CategoryScreen") }) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerHeader()
+                DrawerBody(navController)
             }
-        },
-        topBar = {
-            CenterAlignedTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            ),
-                title = {
-                    Text(
-                        text = "Cashfy",
-                        fontSize = 35.sp,
-                        fontStyle = FontStyle.Italic,
-                        fontFamily = FontFamily.Serif
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                       // scope.launch {
-                        //    drawerState.apply {
-                        //        if (isClosed) open() else close()
-                         //   }
-                       // }
-                    }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Menu"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings"
-                        )
-                    }
-                }
-            )
-
         }
-    ){
-        Column {
-            Spacer(modifier = Modifier.Companion.size(50.dp))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { navController.navigate("AddTransactionScreen") }
-            ) {
-                Text(text = "to Accounts")
+    ) {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = { navController.navigate("AddTransactionScreen") }) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                    )
+                }
+            },
+            topBar = {
+                TopAppBarContent(scope, drawerState)
             }
-            LazyColumn (
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(10.dp)
-                    .background(Color.Green)
+        ) {
+            Column {
+                Spacer(modifier = Modifier.size(it.calculateTopPadding()))
+                LazyColumn(
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(10.dp)
+                        .background(Color.Green)
 
-            ){
-                items(mainState.transactions) {
-                    TransactionListItem(transaction = it) {
-                        //  onNavigate.invoke(it.transaction.uidTransaction)
+                ) {
+                    items(mainState.transactions) {
+                        TransactionListItem(transaction = it) {
+                            //  onNavigate.invoke(it.transaction.uidTransaction)
+                        }
                     }
                 }
             }
