@@ -1,24 +1,17 @@
 package com.example.compose1.ui.addtransaction
 
-import android.app.DatePickerDialog
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.compose1.Graph
-import com.example.compose1.ui.category.CategoryState
-import com.example.compose1.ui.repository.Repository
-import android.content.Context
-import android.widget.DatePicker
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose1.Graph
 import com.example.compose1.db.entities.Account
 import com.example.compose1.db.entities.Category
 import com.example.compose1.db.entities.Transaction
+import com.example.compose1.ui.repository.Repository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import java.util.Date
 
 class AddTransactionViewModel(

@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.compose1.db.entities.Account
-import com.example.compose1.ui.DrawerBody
-import com.example.compose1.ui.DrawerHeader
-import com.example.compose1.ui.TopAppBarContent
+import com.example.compose1.ui.navigation.DrawerBody
+import com.example.compose1.ui.navigation.DrawerHeader
+import com.example.compose1.ui.navigation.TopAppBarContent
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
