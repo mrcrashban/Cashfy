@@ -45,7 +45,8 @@ import java.util.Locale
 
 @Composable
 fun MainScreen(
-    navController: NavController
+    navController: NavController,
+    onNavigate: (Int) -> Unit
 ) {
     val mainViewModel = viewModel(modelClass = MainViewModel::class.java)
     val mainState = mainViewModel.state
@@ -62,7 +63,7 @@ fun MainScreen(
     ) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = { navController.navigate("AddTransactionScreen") }) {
+                FloatingActionButton(onClick = { onNavigate.invoke(-1) }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = null,
@@ -83,7 +84,7 @@ fun MainScreen(
                 ) {
                     items(mainState.transactions) {
                         TransactionListItem(transaction = it) {
-                            //  onNavigate.invoke(it.transaction.uidTransaction)
+                              onNavigate.invoke(it.transaction.uidTransaction)
                         }
                     }
                 }

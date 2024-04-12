@@ -49,9 +49,10 @@ import java.util.Date
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddTransactionScreen(
-    navController: NavController
+    id: Int,
+    navigateUp: () -> Unit,
 ){
-   val addTransactionViewModel = viewModel(modelClass = AddTransactionViewModel::class.java)
+   val addTransactionViewModel = viewModel<AddTransactionViewModel>(factory = AddTransactionViewModelFactory(id))
    val addTransactionState = addTransactionViewModel.state
     Scaffold {
         Column {
@@ -63,11 +64,11 @@ fun AddTransactionScreen(
                 onCommentChange = addTransactionViewModel::onCommentChange,
                 onCategoryChange = addTransactionViewModel::onCategoryChange,
                 onAccountChange = addTransactionViewModel::onAccountChange,
-                onSaveTransaction = addTransactionViewModel::AddTransaction) {
-                navController.navigate("MainScreen")
+                updateTransaction = { addTransactionViewModel.updateTransaction(id) },
+                onSaveTransaction = addTransactionViewModel::addTransaction) {
+                navigateUp.invoke()
             }
         }
-
     }
 }
 
@@ -81,6 +82,7 @@ private fun TransactionEntry(
     onCommentChange: (String) -> Unit,
     onCategoryChange: (String) -> Unit,
     onAccountChange: (String) -> Unit,
+    updateTransaction: () -> Unit,
     onSaveTransaction: () -> Unit,
     navController: () -> Unit
 
@@ -146,9 +148,18 @@ private fun TransactionEntry(
             onCategoryChange = onAccountChange
         )
         Spacer(modifier = Modifier.Companion.size(15.dp))
+        val buttonText = if (state.isUpdatingTransaction) "Update Transaction"
+        else "Add Transaction"
         Button(
             onClick = {
-                onSaveTransaction.invoke()
+                when (state.isUpdatingTransaction) {
+                    true -> {
+                        updateTransaction.invoke()
+                    }
+                    false -> {
+                        onSaveTransaction.invoke()
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = state.sum.isNotEmpty()
@@ -158,7 +169,7 @@ private fun TransactionEntry(
                     && state.date.toString().isNotEmpty()
                     && state.type.isNotEmpty(),
         ) {
-            Text(text = "Add transaction")
+            Text(text = buttonText)
         }
     }
 }

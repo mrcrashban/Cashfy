@@ -16,6 +16,9 @@ class Repository(
     val category = categoryDao.getAllCategories()
     val account = accountDao.getAllAccounts()
 
+    fun getTransactionWithAllAtributes(id: Int) = transactionDao
+        .getTransactionWithId(id)
+
     suspend fun insertTransaction(transaction: Transaction){
         transactionDao.insertTransaction(transaction)
     }

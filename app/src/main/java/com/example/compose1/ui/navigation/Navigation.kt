@@ -7,8 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.compose1.CashfyApplication
-import com.example.compose1.Graph
 import com.example.compose1.ui.account.AccountScreen
 import com.example.compose1.ui.addtransaction.AddTransactionScreen
 import com.example.compose1.ui.category.CategoryScreen
@@ -31,7 +29,10 @@ fun CashfyNavigation(
         startDestination = Routes.MainScreen.name
     ) {
         composable(route = Routes.MainScreen.name) {
-            MainScreen(navController = navHostController)
+            MainScreen(onNavigate = {id ->
+                navHostController.navigate(route = "${Routes.AddTransactionScreen.name}?id=$id")
+            },
+                navController = navHostController)
         }
         composable(route = Routes.CategoryScreen.name) {
             CategoryScreen(navController = navHostController)
@@ -39,8 +40,14 @@ fun CashfyNavigation(
         composable(route = Routes.AccountScreen.name){
             AccountScreen(navController = navHostController)
         }
-        composable(route = Routes.AddTransactionScreen.name){
-            AddTransactionScreen(navController = navHostController)
+        composable(
+            route = "${Routes.AddTransactionScreen.name}?id={id}",
+            arguments = listOf(navArgument("id") {type = NavType.IntType})
+        ){
+            val id = it.arguments?.getInt("id") ?: -1
+            AddTransactionScreen(id = id){
+                navHostController.navigateUp()
+            }
         }
     }
 }

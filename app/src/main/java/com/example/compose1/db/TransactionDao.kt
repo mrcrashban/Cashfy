@@ -26,6 +26,13 @@ interface TransactionDao {
     @Query("""
         SELECT * FROM `transaction` AS T INNER JOIN category AS C
         ON T.category_id = C.uidCategory INNER JOIN account AS A
+        ON T.account_id = A.uidAccount WHERE T.uidTransaction =:id
+    """)
+    fun getTransactionWithId(id: Int): Flow<TransactionsWithAccountAndCategory>
+
+    @Query("""
+        SELECT * FROM `transaction` AS T INNER JOIN category AS C
+        ON T.category_id = C.uidCategory INNER JOIN account AS A
         ON T.account_id = A.uidAccount
         """)
     fun getTransactionsWithAccountAndCategory(): Flow<List<TransactionsWithAccountAndCategory>>
