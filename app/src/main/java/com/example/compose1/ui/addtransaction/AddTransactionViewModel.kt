@@ -10,7 +10,7 @@ import com.example.compose1.Graph
 import com.example.compose1.db.entities.Account
 import com.example.compose1.db.entities.Category
 import com.example.compose1.db.entities.Transaction
-import com.example.compose1.ui.repository.Repository
+import com.example.compose1.db.repository.Repository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -25,7 +25,7 @@ class AddTransactionViewModel(
     init {
         getCategories()
         getAccounts()
-        state = if (transactionId != -1){
+        state = if (transactionId != -1) {
             state.copy(isUpdatingTransaction = true)
         } else {
             state.copy(isUpdatingTransaction = false)
@@ -35,19 +35,22 @@ class AddTransactionViewModel(
             viewModelScope.launch {
                 repository
                     .getTransactionWithAllAtributes(transactionId)
-                    .collectLatest {
-                        state = state.copy(
-                            account = it.account.accountName,
-                            category = it.category.categoryName,
-                            type = it.transaction.type,
-                            date = it.transaction.date,
-                            sum = it.transaction.sum.toString(),
-                            comment = it.transaction.comment,
-                        )
+                    .collectLatest { transactionWithAllAttributes ->
+                        transactionWithAllAttributes?.let {
+                            state = state.copy(
+                                account = it.account.accountName,
+                                category = it.category.categoryName,
+                                type = it.transaction.type,
+                                date = it.transaction.date,
+                                sum = it.transaction.sum.toString(),
+                                comment = it.transaction.comment,
+                            )
+                        }
                     }
             }
         }
     }
+
 
     private fun getCategories(){
         viewModelScope.launch {
@@ -108,6 +111,23 @@ class AddTransactionViewModel(
         }
     }
 
+    fun deleteTransaction(id: Int){
+        viewModelScope.launch {
+            repository.deleteTransaction(
+                Transaction(
+                    accountIid = 0,
+                    categoryId = 0,
+                    sum = 0.0,
+                    type = "",
+                    date = state.date,
+                    comment = "",
+                    uidTransaction = id
+                )
+            )
+            state = state.copy(isDeleted = true)
+        }
+    }
+
     fun onSumChange(newValue:String){
         state = state.copy(sum = newValue)
     }
@@ -148,5 +168,6 @@ data class TransactionState(
     val type: String = "",
     val date: Date = Date(),
     val comment: String = "",
-    val isUpdatingTransaction: Boolean = false
+    val isUpdatingTransaction: Boolean = false,
+    val isDeleted: Boolean = false
     )

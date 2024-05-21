@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Compose1</string>
+    <string name="add_transaction">Добавление транзакции</string>
+    <string name="income">Доход</string>
+    <string name="outcome">Расход</string>
+    <string name="input_sum">Введите сумму</string>
+    <string name="transaction_sum">Сумма транзакции</string>
+    <string name="choose_account">Выберите счёт</string>
+    <string name="choose_category">Выберите категорию</string>
+    <string name="choose_date">Выберите дату</string>
+    <string name="write_comment">Введите заметку</string>
+    <string name="comment">Заметка</string>
+    <string name="update_transaction_btn">Обновить транзакцию</string>
+    <string name="add_transaction_btn">Добавить транзакцию</string>
+    <string name="delete_transaction_btn">Удалить</string>
 </resources>

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.compose1.Graph
 import com.example.compose1.db.entities.Category
-import com.example.compose1.ui.repository.Repository
+import com.example.compose1.db.repository.Repository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

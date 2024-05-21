@@ -9,7 +9,7 @@ import com.example.compose1.Graph
 import com.example.compose1.db.entities.Account
 import com.example.compose1.db.entities.Category
 import com.example.compose1.ui.category.CategoryState
-import com.example.compose1.ui.repository.Repository
+import com.example.compose1.db.repository.Repository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

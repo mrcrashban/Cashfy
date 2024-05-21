@@ -1,4 +1,4 @@
-package com.example.compose1.ui.repository
+package com.example.compose1.db.repository
 
 import com.example.compose1.db.AccountDao
 import com.example.compose1.db.CategoryDao

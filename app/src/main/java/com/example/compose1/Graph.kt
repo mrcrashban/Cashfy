@@ -2,7 +2,7 @@ package com.example.compose1
 
 import android.content.Context
 import com.example.compose1.db.AppDatabase
-import com.example.compose1.ui.repository.Repository
+import com.example.compose1.db.repository.Repository
 
 object Graph {
     lateinit var db:AppDatabase

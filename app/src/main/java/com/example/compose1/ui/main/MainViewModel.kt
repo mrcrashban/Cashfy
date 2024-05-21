@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.compose1.Graph
 import com.example.compose1.db.TransactionsWithAccountAndCategory
 import com.example.compose1.db.entities.Transaction
-import com.example.compose1.ui.repository.Repository
+import com.example.compose1.db.repository.Repository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
