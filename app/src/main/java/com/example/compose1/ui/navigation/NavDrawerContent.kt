@@ -41,10 +41,10 @@ fun TopAppBarContent(scope: CoroutineScope, drawerState: DrawerState){
     ),
         title = {
             Text(
-                text = "Cashfy",
-                fontSize = 35.sp,
-                fontStyle = FontStyle.Italic,
-                fontFamily = FontFamily.Serif
+                text = "Категории",
+                fontSize = 25.sp,
+                //fontStyle = FontStyle.Italic,
+                //fontFamily = FontFamily.Serif
             )
         },
         navigationIcon = {
