@@ -189,7 +189,6 @@ private fun TransactionEntry(
                 unfocusedBorderColor = Color.LightGray
             )
         )
-        Spacer(modifier = Modifier.size(15.dp))
         Text(
             modifier = Modifier
                 .padding(start = 10.dp, top = 15.dp, bottom = 3.dp),
@@ -263,7 +262,6 @@ private fun TransactionEntry(
             }
             Spacer(modifier = Modifier.size(15.dp))
         }
-        Spacer(modifier = Modifier.size(15.dp))
         Text(
             modifier = Modifier
                 .padding(start = 10.dp, top = 15.dp, bottom = 13.dp),

@@ -70,14 +70,6 @@ fun TopAppBarContent(scope: CoroutineScope, drawerState: DrawerState){
                     contentDescription = "Menu"
                 )
             }
-        },
-        actions = {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings"
-                )
-            }
         }
     )
 }
