@@ -10,5 +10,6 @@
     <color name="soft_green">#FF6DD28F</color>
     <color name="soft_red">#FFC57474</color>
     <color name="app_background">#FFF1EEE8</color>
+    <color name="user_background">#D8D5D0</color>
     <color name="app_name">#FFCEBCBC</color>
 </resources>

@@ -11,6 +11,7 @@ import com.example.compose1.db.entities.Account
 import com.example.compose1.db.entities.Category
 import com.example.compose1.db.entities.Transaction
 import com.example.compose1.db.repository.Repository
+import com.example.compose1.ui.TransactionTypes
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -40,7 +41,11 @@ class AddTransactionViewModel(
                             state = state.copy(
                                 account = it.account.accountName,
                                 category = it.category.categoryName,
-                                type = it.transaction.type,
+                                type = if (it.transaction.type == TransactionTypes.income.toString()) {
+                                    TransactionTypes.income
+                                } else {
+                                    TransactionTypes.outcome
+                                },
                                 date = it.transaction.date,
                                 sum = it.transaction.sum.toString(),
                                 comment = it.transaction.comment,
@@ -83,7 +88,7 @@ class AddTransactionViewModel(
                         it.categoryName == state.category
                     }?.uidCategory ?: 0,
                     sum = state.sum.toDouble(),
-                    type = state.type,
+                    type = state.type.toString(),
                     date = state.date,
                     comment = state.comment
                 )
@@ -102,7 +107,7 @@ class AddTransactionViewModel(
                         it.categoryName == state.category
                     }?.uidCategory ?: 0,
                     sum = state.sum.toDouble(),
-                    type = state.type,
+                    type = state.type.toString(),
                     date = state.date,
                     comment = state.comment,
                     uidTransaction = id
@@ -132,7 +137,7 @@ class AddTransactionViewModel(
         state = state.copy(sum = newValue)
     }
 
-    fun onTypeChange(newValue:String){
+    fun onTypeChange(newValue:TransactionTypes){
         state = state.copy(type = newValue)
     }
 
@@ -151,6 +156,10 @@ class AddTransactionViewModel(
     fun onAccountChange(newValue: String){
         state = state.copy(account = newValue)
     }
+
+    fun onCategorySelected(category: Category) {
+        state = state.copy(selectedCategory = category)
+    }
 }
 
 class AddTransactionViewModelFactory(private val id: Int):ViewModelProvider.Factory{
@@ -164,8 +173,9 @@ data class TransactionState(
     val categoryList: List<Category> = emptyList(),
     val account: String = "",
     val category: String = "",
+    val selectedCategory: Category? = null,
     val sum: String = "",
-    val type: String = "",
+    val type: TransactionTypes = TransactionTypes.outcome,
     val date: Date = Date(),
     val comment: String = "",
     val isUpdatingTransaction: Boolean = false,

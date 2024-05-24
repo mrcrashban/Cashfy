@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -97,7 +101,7 @@ fun CategoryScreen(
                 ) {
                     navController.navigate("MainScreen")
                 }
-                /*LazyVerticalStaggeredGrid(
+                LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(3),
                     verticalItemSpacing = 5.dp,
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -106,11 +110,11 @@ fun CategoryScreen(
                         .background(Color.Transparent)
                 ) {
                     items(categoryState.categoryList) {
-                        Categories(category = it) {
+                        Categories(category = it, isSelected = false) {
                             categoryViewModel.deleteCategory(it)
                         }
                     }
-                }*/
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -422,11 +426,19 @@ private fun CategoryEntry(
 @Composable
 fun Categories(
     category: Category,
+    isSelected: Boolean, // Добавляем параметр для проверки выбранности
     onCategoryClick: () -> Unit
-){
+) {
+    val borderModifier = if (isSelected) {
+        Modifier.border(2.dp, Color.Black)
+    } else {
+        Modifier
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .then(borderModifier) // Добавляем обводку
             .background(colorResource(id = R.color.app_background))
             .clickable {
                 onCategoryClick.invoke()
@@ -456,6 +468,7 @@ fun Categories(
         }
     }
 }
+
 
 
 fun getImageResource(imageId: Int): Int {

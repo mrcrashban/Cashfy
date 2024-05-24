@@ -20,6 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -66,6 +69,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose1.R
 import com.example.compose1.db.entities.Account
 import com.example.compose1.db.entities.Category
+import com.example.compose1.ui.TransactionTypes
+import com.example.compose1.ui.category.Categories
+import com.example.compose1.ui.category.CategoryViewModel
 import com.example.compose1.ui.main.formatDate
 import java.util.Calendar
 import java.util.Date
@@ -88,6 +94,7 @@ fun AddTransactionScreen(
                 onDateSelected = addTransactionViewModel::onDateChange,
                 onCommentChange = addTransactionViewModel::onCommentChange,
                 onCategoryChange = addTransactionViewModel::onCategoryChange,
+                onCategorySelected = addTransactionViewModel::onCategorySelected,
                 onAccountChange = addTransactionViewModel::onAccountChange,
                 updateTransaction = { addTransactionViewModel.updateTransaction(id) },
                 onSaveTransaction = addTransactionViewModel::addTransaction,
@@ -102,10 +109,11 @@ private fun TransactionEntry(
     modifier: Modifier = Modifier,
     state: TransactionState,
     onSumChange: (String) -> Unit,
-    onTypeChange: (String) -> Unit,
+    onTypeChange: (TransactionTypes) -> Unit,
     onDateSelected: (Date) -> Unit,
     onCommentChange: (String) -> Unit,
     onCategoryChange: (String) -> Unit,
+    onCategorySelected: (Category) -> Unit,
     onAccountChange: (String) -> Unit,
     updateTransaction: () -> Unit,
     onSaveTransaction: () -> Unit,
@@ -113,6 +121,8 @@ private fun TransactionEntry(
     navigateUp: () -> Unit
 ){
     var selectedType by remember { mutableStateOf(state.type) }
+    val categoryViewModel = viewModel(modelClass = CategoryViewModel::class.java)
+    val categoryState = categoryViewModel.state
     Column (
         modifier = Modifier
             .fillMaxHeight()
@@ -136,19 +146,19 @@ private fun TransactionEntry(
         ) {
             TransactionTypeButton(
                 text = stringResource(id = R.string.income),
-                isSelected = selectedType == "income",
+                isSelected = selectedType == TransactionTypes.income,
                 onClick = {
-                    selectedType = "income"
-                    onTypeChange("income")
+                    selectedType = TransactionTypes.income
+                    onTypeChange(TransactionTypes.income)
                 },
                 modifier = Modifier.weight(1f)
             )
             TransactionTypeButton(
                 text = stringResource(id = R.string.outcome),
-                isSelected = selectedType == "outcome",
+                isSelected = selectedType == TransactionTypes.outcome,
                 onClick = {
-                    selectedType = "outcome"
-                    onTypeChange("outcome")
+                    selectedType = TransactionTypes.outcome
+                    onTypeChange(TransactionTypes.outcome)
                 },
                 modifier = Modifier.weight(1f)
             )
@@ -197,11 +207,27 @@ private fun TransactionEntry(
             fontSize = 20.sp,
             text = stringResource(id = R.string.choose_category)
         )
-        Category_ExposedDropdownMenuBox(
-            categories = state.categoryList,
-            onCategoryChange = onCategoryChange,
-            initialCategory = state.category
-        )
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(3),
+            verticalItemSpacing = 5.dp,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .background(Color.Transparent)
+        ) {
+            items(state.categoryList) { category ->
+                val isSelected = category == state.selectedCategory
+                Categories(
+                    category = category,
+                    isSelected = isSelected, // Передаем состояние выбранности
+                    onCategoryClick = {
+                        onCategoryChange(category.categoryName)
+                        onCategorySelected(category)
+                    }
+                )
+            }
+        }
         Spacer(modifier = Modifier.size(15.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -295,7 +321,6 @@ private fun TransactionEntry(
                             && state.category.isNotEmpty()
                             && state.comment.isNotEmpty()
                             && state.date.toString().isNotEmpty()
-                            && state.type.isNotEmpty()
                 ) {
                     Text(
                         text = if (state.isUpdatingTransaction) stringResource(id = R.string.update_transaction_btn)
